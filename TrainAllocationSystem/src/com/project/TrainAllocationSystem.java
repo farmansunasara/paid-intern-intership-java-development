@@ -10,6 +10,7 @@ public class TrainAllocationSystem {
 	static String[] trainnames = {"Train 1","Train 2","Train 3"};
 	static int booggie=3;
 	static int seat=3;
+	private int loginId = 1000;
 
 	static boolean[][][] seats = new boolean[trainnames.length][booggie][seat];
 	public static void main(String[] args) {
@@ -45,10 +46,6 @@ public class TrainAllocationSystem {
 				break;
 			}
 		}while(true);
-		
-	
-		
-
 	}
 	
 	private void displayMenu() {
@@ -60,30 +57,26 @@ public class TrainAllocationSystem {
 		System.out.println("4. Display Complete Information ");
 		System.out.println("5. Display Train Status");
 		System.out.println("6. Exit");
-		
 	}
 	
 	private void createUserProfile(Scanner sc) {
 		System.out.println("Enter a your name");
-		String name = sc.next();
+		String name = sc.nextLine();
 		System.out.println("Enter a your age");
 		int age = sc.nextInt();
 		int loginId = generateLoginId();
 		
-		
-		 UserProfile userProfile = new UserProfile(loginId, name, age);
-	        userProfiles.put(loginId, userProfile);
+		UserProfile userProfile = new UserProfile(loginId, name, age);
+	    userProfiles.put(loginId, userProfile);
 		
 		System.out.println("Profile register successfully");
 		
-		System.out.println("your login Id : "+ loginId);
-
+		System.out.println("Your login Id : "+ loginId);
 	}
 	
 	private void chooseTrain(Scanner sc) {
-
 		System.out.println("Enter a your login Id");
-		int loginId=sc.nextInt();
+		int loginId = sc.nextInt();
         UserProfile userProfile = findUserByLoginId(loginId);
 	        if (userProfile == null) {
 	            System.out.println("Invalid login ID.");
@@ -102,23 +95,16 @@ public class TrainAllocationSystem {
 			System.out.println("Train not available");
 			return;
 		}
-		
 		 
-        if(userProfile.trainName != null) {
+        if(userProfile.getTrainName() != null) {
         	System.out.println("Already your seat is booked..!");
         	return;
         }
         
 		allocatSeat(userProfile,trainChoice-1);
-		
-
-
 	}
 	
-	
-	
 	private void allocatSeat(UserProfile userProfile,int trainIndex) {
-		// TODO Auto-generated method stub
 		int totalBoogies=seats[trainIndex].length-1;
 		boolean isLastSeatLeft=seats[trainIndex][totalBoogies][seats[trainIndex][totalBoogies].length-1];
 		
@@ -139,14 +125,11 @@ public class TrainAllocationSystem {
 					return;
 				}
 			}
-			
 		}
-		
 	}
-	private int loginId = 1000;
+	
 	private int generateLoginId() {
-		return ++loginId;
-		
+		return loginId++;
 	}
 	
 	private UserProfile findUserByLoginId(int loginId) {
@@ -155,6 +138,7 @@ public class TrainAllocationSystem {
 		}
         return null;
     }
+	
 	private void displayProfile(Scanner sc) {
 		System.out.println("Enter a login_Id");
 		int loginId=sc.nextInt();
@@ -170,7 +154,6 @@ public class TrainAllocationSystem {
 	}
 	
 	private void displayAllProfile(Scanner sc) {
-		
 		if(userProfiles==null) {
 			System.out.println("No User registered..!");
     		return;
@@ -179,44 +162,38 @@ public class TrainAllocationSystem {
 		for(Entry<Integer, UserProfile> userProfile : userProfiles.entrySet()) {
     		System.out.println(userProfile.getValue());
     	}
-		
 	}
 	
 	private void displayTrainStatus() {
-		
 		 for (int i = 0; i < seats.length; i++) {
-	        	
-	        	int totalSeats = 0, totalBookedSeets = 0;
-				for (int j = 0; j < seats[i].length; j++) {
+			 
+	        int totalSeats = 0, totalBookedSeets = 0;
+			for (int j = 0; j < seats[i].length; j++) {
 					
-					int totalBoogieSeats = 0, totalBookedBoogieSeats = 0;
-					for (int k = 0; k < seats[i][j].length; k++) {
+				int totalBoogieSeats = 0, totalBookedBoogieSeats = 0;
+				for (int k = 0; k < seats[i][j].length; k++) {
 						
-						totalSeats++;
-						totalBoogieSeats++;
-						if(seats[i][j][k]) {
-							totalBookedSeets++;
-							totalBookedBoogieSeats++;
-						}
+					totalSeats++;
+					totalBoogieSeats++;
+					if(seats[i][j][k]) {
+						totalBookedSeets++;
+						totalBookedBoogieSeats++;
 					}
-					System.out.println(trainnames[i] + ", " +"Boogie " + (j+1) + " - " + " Total seats " + totalBoogieSeats + ", Booked seats " + totalBookedBoogieSeats + ", Remaining seats " + (totalBoogieSeats-totalBookedBoogieSeats));
 				}
-				System.out.println(trainnames[i] + " - " + "Total seats " + totalSeats +", Booked seats " + totalBookedSeets + ", Remaining seats " + (totalSeats-totalBookedSeets) + "\n");
+				System.out.println(trainnames[i] + ", " +"Boogie " + (j+1) + " - " + " Total seats " + totalBoogieSeats + ", Booked seats " + totalBookedBoogieSeats + ", Remaining seats " + (totalBoogieSeats-totalBookedBoogieSeats));
 			}
-		
+			System.out.println(trainnames[i] + " - " + "Total seats " + totalSeats +", Booked seats " + totalBookedSeets + ", Remaining seats " + (totalSeats-totalBookedSeets) + "\n");
+		}
 	}
-	
-
 }
 
 class UserProfile{
-	int loginId;
-	String name;
-	int age;
-	String trainName;
-	int boogieNumber=-1;
-	int seatNumber=-1;
-	
+	private int loginId;
+	private String name;
+	private int age;
+	private String trainName;
+	private int boogieNumber=-1;
+	private int seatNumber=-1;
 	
 	public UserProfile(int loginId, String name, int age) {
 		this.loginId = loginId;
@@ -230,20 +207,53 @@ class UserProfile{
 				+ ", boogieNumber=" + (boogieNumber+1) + ", seatNumber=" + (seatNumber+1) + "]";
 	}
 
-	
+	public int getLoginId() {
+		return loginId;
+	}
+
+	public void setLoginId(int loginId) {
+		this.loginId = loginId;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public int getAge() {
+		return age;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public String getTrainName() {
+		return trainName;
+	}
+
 	public void setTrainName(String trainName) {
 		this.trainName = trainName;
 	}
-	
+
+	public int getBoogieNumber() {
+		return boogieNumber;
+	}
+
 	public void setBoogieNumber(int boogieNumber) {
 		this.boogieNumber = boogieNumber;
 	}
-	
+
+	public int getSeatNumber() {
+		return seatNumber;
+	}
+
 	public void setSeatNumber(int seatNumber) {
 		this.seatNumber = seatNumber;
 	}
-	
-	
 }
 
 
